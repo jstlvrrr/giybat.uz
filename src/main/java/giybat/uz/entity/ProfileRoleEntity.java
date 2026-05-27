@@ -22,6 +22,7 @@ public class ProfileRoleEntity {
     @JoinColumn(name = "profile_id", insertable = false, updatable = false)
     private ProfileEntity profile;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "roles")
     private ProfileRole roles;
 
