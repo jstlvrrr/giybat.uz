@@ -1,0 +1,6 @@
+package giybat.uz.enums;
+
+public enum ProfileRole {
+    USER,
+    ADMIN
+}

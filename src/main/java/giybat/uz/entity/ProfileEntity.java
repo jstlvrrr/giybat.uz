@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Table(name = "profile")
 @Entity
 @Getter
@@ -30,5 +32,7 @@ public class ProfileEntity {
     @Column(nullable = false, name = "visible")
     private Boolean visible = Boolean.TRUE;
 
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
 }
