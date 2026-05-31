@@ -7,6 +7,7 @@ import giybat.uz.enums.ProfileRole;
 import giybat.uz.exps.AppBadException;
 import giybat.uz.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,11 @@ public class AuthService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private ProfileRoleService profileRoleService;
+    @Autowired
+    private EmailSendingService emailSendingService;
+    @Autowired
+    private ProfileService profileService;
+
 
     public String registration(RegistrationDTO dto) {
 
@@ -48,6 +54,14 @@ public class AuthService {
         //Insert Roles
         profileRoleService.create(entity.getId(), ProfileRole.ROLE_USER);
 
+        emailSendingService.sendRegistrationEmail(dto.getUsername(), entity.getId());
         return "User created";
     }
+
+    public String regVerification(Integer profileId) {
+        ProfileEntity profile = profileService.getById(profileId);
+        if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
+            profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+        }
+    throw new AppBadException("Verification failed");    }
 }
