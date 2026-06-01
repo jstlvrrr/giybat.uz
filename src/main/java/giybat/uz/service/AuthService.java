@@ -7,12 +7,12 @@ import giybat.uz.enums.ProfileRole;
 import giybat.uz.exps.AppBadException;
 import giybat.uz.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -25,8 +25,6 @@ public class AuthService {
     private ProfileRoleService profileRoleService;
     @Autowired
     private EmailSendingService emailSendingService;
-    @Autowired
-    private ProfileService profileService;
 
 
     public String registration(RegistrationDTO dto) {
@@ -48,20 +46,26 @@ public class AuthService {
         entity.setUsername(dto.getUsername());
         entity.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         entity.setStatus(GeneralStatus.IN_REGISTRATION);
+        entity.setVerificationCode(UUID.randomUUID().toString());
         entity.setVisible(true);
         entity.setCreatedDate(LocalDateTime.now());
         profileRepository.save(entity); // save
         //Insert Roles
         profileRoleService.create(entity.getId(), ProfileRole.ROLE_USER);
 
-        emailSendingService.sendRegistrationEmail(dto.getUsername(), entity.getId());
+        emailSendingService.sendRegistrationEmail(dto.getUsername(), entity.getVerificationCode());
         return "User created";
     }
 
-    public String regVerification(Integer profileId) {
-        ProfileEntity profile = profileService.getById(profileId);
-        if (profile.getStatus().equals(GeneralStatus.IN_REGISTRATION)) {
-            profileRepository.changeStatus(profileId, GeneralStatus.ACTIVE);
+    public String regVerification(String verificationCode) {
+        int updatedCount = profileRepository.activateRegistration(
+                verificationCode,
+                GeneralStatus.IN_REGISTRATION,
+                GeneralStatus.ACTIVE
+        );
+        if (updatedCount == 1) {
+            return "User verified";
         }
-    throw new AppBadException("Verification failed");    }
+        throw new AppBadException("Verification failed");
+    }
 }

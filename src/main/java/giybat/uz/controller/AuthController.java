@@ -2,7 +2,6 @@ package giybat.uz.controller;
 
 import giybat.uz.dto.RegistrationDTO;
 import giybat.uz.service.AuthService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +19,9 @@ public class AuthController {
         return ResponseEntity.ok().body(authService.registration(dto));
     }
 
-    @GetMapping("/registration/verification/{profileId}")
-    public ResponseEntity<String> regVerification(@Valid @RequestBody RegistrationDTO dto, @PathVariable Integer profileId) {
-        return ResponseEntity.ok().body(authService.regVerification(profileId));
+    @GetMapping("/registration/verification/{verificationCode}")
+    public ResponseEntity<String> regVerification(@PathVariable("verificationCode") String verificationCode) {
+        return ResponseEntity.ok().body(authService.regVerification(verificationCode));
     }
 
 

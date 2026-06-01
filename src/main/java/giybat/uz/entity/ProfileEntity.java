@@ -29,6 +29,9 @@ public class ProfileEntity {
     @Enumerated(EnumType.STRING)
     private GeneralStatus status; // ACTIVE, BLOCK
 
+    @Column(name = "verification_code", unique = true)
+    private String verificationCode;
+
     @Column(nullable = false, name = "visible")
     private Boolean visible = Boolean.TRUE;
 

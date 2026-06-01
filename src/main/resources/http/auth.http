@@ -7,3 +7,8 @@ Content-Type: application/json
   "username": "bmuxammadov1@gmail.com",
   "password": "12345"
 }
+
+
+### Registration verification
+@verificationCode = paste-code-from-email
+GET http://localhost:8080/auth/registration/verification/{{verificationCode}}

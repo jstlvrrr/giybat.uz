@@ -14,9 +14,9 @@ public class EmailSendingService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendRegistrationEmail(String email, Integer profileId) {
+    public void sendRegistrationEmail(String email, String verificationCode) {
         String subject = "Registration Email";
-        String body = "Your registration code is: " + profileId;
+        String body = "Your registration link: http://localhost:8080/auth/registration/verification/" + verificationCode;
         sendEmail(email, subject, body);
     }
 

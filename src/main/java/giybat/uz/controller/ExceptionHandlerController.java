@@ -30,7 +30,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, headers, status);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(AppBadException.class)
     public ResponseEntity<String> handle(AppBadException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
